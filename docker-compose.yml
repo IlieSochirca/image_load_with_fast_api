@@ -1,0 +1,45 @@
+version: '3'
+services:
+  db:
+    image: postgres:11.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    networks:
+      - shared_network
+  backend:
+    build:
+      context: ./src
+    ports:
+      - "$PORT:8080"
+    volumes:
+      - ./src:/src
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - shared_network
+  pgadmin:
+    image: crunchydata/crunchy-pgadmin4:centos7-10.4-2.0.0
+    env_file:
+      - .env
+    volumes:
+      - pga4volume:/var/lib/pgadmin
+    ports:
+      - "5050:5050"
+    networks:
+      - shared_network
+volumes:
+  postgres_data:
+  pga4volume:
+
+networks:
+ shared_network:
+   driver: bridge
