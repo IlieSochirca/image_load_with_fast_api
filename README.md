@@ -1,2 +1,2 @@
-# image_load_with_fast_api
+# Image upload with FastApi
 Simple Image Uploader API with FastApi
